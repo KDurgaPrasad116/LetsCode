@@ -15,6 +15,8 @@
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@neon/config": "^1.7.0",
+    "@neon/env": "^1.4.1",
     "@prisma/client": "^5.22.0",
     "@tanstack/react-query": "^5.62.8",
     "clsx": "^2.1.1",
