@@ -24,6 +24,7 @@ const authSecret =
     : undefined);
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  trustHost: true,
   providers: [
     Google({
       clientId: googleClientId || "google-client-placeholder",

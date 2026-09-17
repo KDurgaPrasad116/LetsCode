@@ -2,10 +2,15 @@ import { NextResponse } from "next/server";
 import { isGoogleConfigured } from "@/auth";
 
 export async function GET() {
-  const appUrl =
+  const rawUrl =
+    process.env.RENDER_EXTERNAL_URL ||
     process.env.NEXTAUTH_URL ||
     process.env.NEXT_PUBLIC_APP_URL ||
     "http://localhost:3000";
+
+  const appUrl = rawUrl.startsWith("http")
+    ? rawUrl.replace(/\/+$/, "")
+    : `https://${rawUrl.replace(/\/+$/, "")}`;
 
   return NextResponse.json({
     google: {
