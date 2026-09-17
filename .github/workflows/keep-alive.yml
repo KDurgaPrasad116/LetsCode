@@ -1,0 +1,31 @@
+name: Render 24/7 Keep-Alive
+
+on:
+  schedule:
+    # Runs every 10 minutes to prevent Render Free tier from sleeping after 14 mins
+    - cron: '*/10 * * * *'
+  workflow_dispatch: # Allows manual one-click trigger from GitHub Actions tab
+
+jobs:
+  ping-service:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Heartbeat Ping
+        run: |
+          TARGET="${{ secrets.RENDER_APP_URL }}"
+          if [ -z "$TARGET" ]; then
+            echo "ℹ️ RENDER_APP_URL secret is not set yet in GitHub Settings -> Secrets -> Actions."
+            echo "ℹ️ Once your Render service is deployed (e.g. https://letscode.onrender.com), add it as RENDER_APP_URL to keep it running 24/7."
+            exit 0
+          fi
+
+          CLEAN_URL="${TARGET%/}/api/health"
+          echo "Sending keep-alive heartbeat to: $CLEAN_URL"
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" -m 30 "$CLEAN_URL")
+
+          echo "HTTP Status Code: $STATUS"
+          if [ "$STATUS" -ge 200 ] && [ "$STATUS" -lt 400 ]; then
+            echo "✅ Render backend is active, healthy, and awake."
+          else
+            echo "⚠️ Health check returned status: $STATUS"
+          fi
