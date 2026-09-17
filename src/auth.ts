@@ -16,6 +16,20 @@ export const isGoogleConfigured = Boolean(
   googleClientId.trim().length > 0
 );
 
+const publicAppUrl =
+  process.env.RENDER_EXTERNAL_URL ||
+  process.env.AUTH_URL ||
+  process.env.NEXTAUTH_URL ||
+  process.env.NEXT_PUBLIC_APP_URL ||
+  "http://localhost:3000";
+
+const canonicalUrl = publicAppUrl.startsWith("http")
+  ? publicAppUrl.replace(/\/+$/, "")
+  : `https://${publicAppUrl.replace(/\/+$/, "")}`;
+
+process.env.AUTH_URL = canonicalUrl;
+process.env.NEXTAUTH_URL = canonicalUrl;
+
 const authSecret =
   process.env.AUTH_SECRET ||
   process.env.NEXTAUTH_SECRET ||
