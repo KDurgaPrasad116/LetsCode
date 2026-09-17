@@ -1,4 +1,9 @@
 import { NextResponse } from "next/server";
+
+if (!process.env.AUTH_SECRET) {
+  process.env.AUTH_SECRET = "letscode_dsa_tracker_super_secret_jwt_key_2026_dev_prod";
+}
+
 import { auth } from "@/auth";
 
 export default auth((req) => {

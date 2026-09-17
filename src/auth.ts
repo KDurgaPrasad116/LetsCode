@@ -19,9 +19,11 @@ export const isGoogleConfigured = Boolean(
 const authSecret =
   process.env.AUTH_SECRET ||
   process.env.NEXTAUTH_SECRET ||
-  (process.env.NODE_ENV !== "production"
-    ? "letscode_dev_fallback_secret_local_only"
-    : undefined);
+  "letscode_dsa_tracker_super_secret_jwt_key_2026_dev_prod";
+
+if (!process.env.AUTH_SECRET) {
+  process.env.AUTH_SECRET = authSecret;
+}
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost: true,
